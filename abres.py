@@ -2,7 +2,7 @@
 import sys, os, re, gzip, time
 
 ########################################################################################
-#### @Authors:	Josephine Strange & Jan Turowski									####
+#### @Authors:	Josephine Strange									####
 #### @Version:	1.0																	####
 #### @Date:		01-Dec-2019															####
 ####																				####
@@ -227,39 +227,6 @@ try:
 		avgDepth = sumDepth // len(sequence) 
 		coverage = depthHit / len(sequence)
 
-		avgDepthDict[index] = avgDepth
-
-		# Write positive hits above a certain threshold to file
-		if coverage >= covThreshold:
-			numHits += 1
-			covDict[index] = coverage
-
-	valuesToOutput = []
-	for index in covDict:
-
-		header = headers[index]
-		sequence = sequences[index]
-
-		avgDepth = avgDepthDict[index]
-		coverage = covDict[index]
-
-		valuesToOutput += [{
-			'header': header,
-			'sequence': sequence,
-			'coverage': coverage,
-			'avgDepth': avgDepth
-		}]
-
-	valuesToOutput = sorted(valuesToOutput, key = lambda i: (i['coverage'], i['avgDepth']), reverse = True)
-
-	for toWrite in valuesToOutput:
-
-		gene = toWrite['header'].split("_")[0].replace(">", "")
-		res = re.search(r"\s(.+):", toWrite['header']).group(1)
-		
-		outfile.write(">{} | Gene: {} | cov: {:.3f} | avg depth: {}\n".format(res, gene, toWrite['coverage'], toWrite['avgDepth']))
-		for i in range(0, len(toWrite['sequence'])-1,60):
-			outfile.write(toWrite['sequence'][i:i+60] + "\n")	
 
 				
 except IOError as err:
